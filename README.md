@@ -3,6 +3,9 @@ Django Project
 
 Table Of Content
 - [Installation & Start-up](#installation-&-startup)
+    - [Django File Directory](#django-file-directory)
+    - [Manage.py](#managepy)
+    - [myProject / Settings.py](#myproject--settingspy)
 - [Django Models](#django-models)
 
 ## Installation & Startup
@@ -11,6 +14,9 @@ Basic installation for django
 
 - Check django version
 ` python -m django --version`
+
+- Use django console
+` python manage.py shell`
 
 - Django setup should follow in the order below :
 
@@ -58,10 +64,11 @@ myProject/
 │   ├── __init__.py
 │   ├── migrations
 │   │   ├── 0001_initial.py
-│   │   ├── __init__.py
+│   │   └── __init__.py
 │   ├── models.py
 │   ├── templates
 │   │   └── myApp
+│   │       ├── base.html
 │   │       └── webPage.html
 │   ├── tests.py
 │   └── views.py
@@ -92,12 +99,14 @@ https://docs.djangoproject.com/en/1.11/ref/django-admin/
     $ python -m django <command> [options]
 ```
     
-### myProject/Settings.py
+### myProject / Settings.py
 Settings/configuration for Django project. Django settings will tell you all about how settings work.
 https://docs.djangoproject.com/en/1.11/topics/settings/
 
 #### Static files
 - Add static root directory
+- Static file consists of CSS, images, etc and doesn't depend on request context and will be the same for every user.
+- Path set to static folder within any app folders.
 ```
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -137,7 +146,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 ```
 
 
-### myProject/__init__.py 
+### myProject / __init__.py 
 An empty file that tells Python that this directory should be considered a Python package. If you’re a Python beginner, read more about packages in the official Python docs.
 https://docs.python.org/3/tutorial/modules.html#tut-packages
 
@@ -146,7 +155,7 @@ https://docs.python.org/3/tutorial/modules.html#tut-packages
 https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
 
 
-### myProject/urls.py
+### myProject / urls.py
 - URLconfs : https://docs.djangoproject.com/en/1.11/topics/http/urls/
 - Urls.py under the project folder(myProject) is the main source of link for urls with other folder views.
 - Need to add
@@ -164,9 +173,9 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
     
     urlpatterns = [
     url(r'^$', views.post_list, name='post_list'),
-]
+    ]
   ```  
-  3. Create the view to link the myApp.urls to the class / object and add the following :
+  3. Create the view in [myApp.urls](#myApp/views.py) to link the myApp.urls to the class / object
 
 #### Arguments
    - required : regex, view
@@ -204,24 +213,36 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
 - Name URL used to identify the view elsewhere in django, esp from within templates. Important to name each URL in the app
 
 
-### myProject/wsgi.py  
+### myProject / wsgi.py  
 An entry-point for WSGI-compatible web servers to serve your project. See How to deploy with WSGI for more details.
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
-## Django Model
-
-Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#field-types).
-
-### myApp/views.py
+### myApp / views.py
 - https://docs.djangoproject.com/en/1.11/topics/http/views/
-- View holds the implementation logic of each application, it requests information from the model and passes it to a *template*.
-- Inputs a request and returns a render function that renders the template myApp/<url-name>.html. Templates are webpages that are reuseable. 
+```
+                  models.py : Data layer(Database)
+                     │
+                     v
+    urls.py  ──>  views.py 
+                     │
+                     v
+                  templates : UI layer(base.html, etc)
+```
+- View holds the implementation logic of each application, it requests information from the model and passes it to a [*template*](#templates).
+- Models gets database data in whatever form necessary and passes the data obtained to the template to display in format defined by webpage design.
+- Inputs a request and returns a render function that renders the template myApp/<url-name>.html. Templates are webpages that are reuseable.
+- Views.py will import the method (Class) in models.py and defines the url name that urls.py uses to link with the urlpatterns.
 
-### myApp//models.py
+```
+    from .models import <class name in models>
 
-### myApp//admin.py
+    def view_url_name_from_urlspy(request):
+        return render(request, '<template>/<webPage>.html')
+```
+
+### myApp / admin.py
 - To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
-#### Templates
+
 - https://docs.djangoproject.com/en/1.11/ref/contrib/admin/
 - E.g: 
 ```
@@ -231,15 +252,76 @@ Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#f
 
 - Create superuser for admin credentials for login admin dashboard access.
 ```
-    $ pythong manage.py createsuperuser
+    $ python manage.py createsuperuser
 ```
 
+### myApp / models.py
+- Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#field-types).
+- See [Django Models](#django-models)
+
+## Templates
+- Django has template extending that is able to re-use HTML for different pages with different models, etc.
+- Uses django template tags to transfer Python syntax to HTML.
+- Adds to the top of templates file to load any static files
+- Any static css file should be declared after all bootstrap styles to avoid being overwritten
+```
+    {% load staticfiles %}
+    <html>
+        <head>
+          <link rel="stylesheet" href="{% static 'css/myApp.css' %}">
+        </head>
+    </html>
+
+```
+
+### Create base template
+- Create block to insert specific HTML data from another template that extends to this particular template(base.html).
+```
+    {% block content %}
+    ...
+    {% endblock %}
+```
+- When other templates are extending the base.html file (calling the base.html), need to include linkage to base.html file.
+- All other templates should be in same folder level as base.html
+```
+    {% extends 'myApp/base.html' %}
+```
+### Django to html syntax
+- Print variables : `{{variables}}`
+- Pipe string to convert line breaks to paragraph : ` string | linebreaksbr `
+- Loops: 
+```
+    {% for post in posts %}
+        {{ post }}
+    {% endfor %}
+```
+
+## Django Models
 
 
+### QuerySet
+- A QuerySet is a list of objects of a given Model. 
+(https://docs.djangoproject.com/en/1.11/ref/models/querysets/)
+- In console to query, will need to import Object(Module-class-name)
+```
+    $ from myApp.models import <model-class-name>
+```
 
+#### Query objects
+```
+    $ <model-class-name>.objects.all()
+```
+#### Create object
+- Objects are created from classes in myApp.models.py
+```
+    $ <model-class-name>.objects.create(...)
+```
 
-
-
+#### Import Users from DB
+```
+    $ from django.contrib.auth.models import User
+    $ User.objects.all()
+```
 
 
 
