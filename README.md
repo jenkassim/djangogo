@@ -83,9 +83,7 @@ myProject/
 ```
 
 ### Manage.py
-Interaction wi    $ django-admin <command> [options]
-    $ manage.py <command> [options]
-    $ python -m django <command> [options]th django project :
+Interaction with django project :
 https://docs.djangoproject.com/en/1.11/ref/django-admin/
 
 - Sets package path on sys.path and DJANGO_SETTINGS_MODULE env variables to point to settings.py file.
