@@ -29,7 +29,7 @@ Basic installation for django
 ```
     $ cd <project-name>
     $ python manage.py runserver 8080
-    
+
     - For c9:
     $ python manage.py runserver 0.0.0.0:8080
 ```
@@ -46,17 +46,17 @@ Basic installation for django
     $ python manage.py startapp <app-name>
 ```
 
-#### Create tables for models in database
+#### Create / Update tables for models in database
 ```
     $ python manage.py makemigrations <app-name>
     $ python manage.py migrate <app-name>
 ```
 
 ### Django file directory
-    
+
 ```
     $ tree <project path>
-    
+
 myProject/
 ├── myApp
 │   ├── admin.py
@@ -78,14 +78,13 @@ myProject/
     ├── __init__.py
     ├── settings.py
     ├── urls.py
+    ├── views.py
     └── wsgi.py
 
 ```
 
 ### Manage.py
-Interaction wi    $ django-admin <command> [options]
-    $ manage.py <command> [options]
-    $ python -m django <command> [options]th django project :
+Interaction with django project :
 https://docs.djangoproject.com/en/1.11/ref/django-admin/
 
 - Sets package path on sys.path and DJANGO_SETTINGS_MODULE env variables to point to settings.py file.
@@ -98,12 +97,14 @@ https://docs.djangoproject.com/en/1.11/ref/django-admin/
     $ manage.py <command> [options]
     $ python -m django <command> [options]
 ```
-    
+
+## Project
 ### myProject / Settings.py
 Settings/configuration for Django project. Django settings will tell you all about how settings work.
 https://docs.djangoproject.com/en/1.11/topics/settings/
 
-#### Static files
+
+#### myProject / Settings.py --> Static files
 - Add static root directory
 - Static file consists of CSS, images, etc and doesn't depend on request context and will be the same for every user.
 - Path set to static folder within any app folders.
@@ -111,8 +112,13 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 ```
-
-#### Allowed hosts
+- Uses local static folder directory that will be mimic(copied) into production live server static folder directory.
+- Command to copy static files from local django folder to server static folders
+```
+    $ python manage.py collectstatic
+    61 static files copied to "/home/jenna_mk/dev/code/Udemy/static_cdn/static_root".
+```
+#### myProject / Settings.py --> Allowed hosts
 - When debug setting is True and ALLOWED_HOSTS is empty, the host is validated against `['localhost', '127.0.0.1', '[::1]']`
 
 - For hosted solution, will need to include host name in the settings. Eg:
@@ -120,8 +126,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
     ALLOWED_HOSTS =python manage.py runserver 0.0.0.0:8080 ['127.0.0.1', '<your_username>.pythonanywhere.com']
     ALLOWED_HOSTS = ['127.0.0.1',https://django-username.c9users.io]
 ```
-
-#### Database
+#### myProject / Settings.py --> Database
 ```
     DATABASES = {
         'default': {
@@ -130,8 +135,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
         }
     }
 ```
-
-#### Installed Apps
+#### myProject / Settings.py --> Installed Apps
 - List all the installed apps created, at to the end of the list.
 - By default should have the following:
 ```
@@ -145,15 +149,13 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
     ]
 ```
 
-
-### myProject / __init__.py 
+### myProject / __init__.py
 An empty file that tells Python that this directory should be considered a Python package. If you’re a Python beginner, read more about packages in the official Python docs.
 https://docs.python.org/3/tutorial/modules.html#tut-packages
 
 - required to make Python treat the directories as containing packages; this is done to prevent directories with a common name from unintentionally hiding valid modules that occur later on the module search path.
 - init code for packageSettings/configuration for this Django project. Django settings will tell you all about how settings work.
 https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
-
 
 ### myProject / urls.py
 - URLconfs : https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -169,18 +171,18 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
   ```
     myApp.urls.py:
     from django.conf.urls import url
-    from . import views 
-    
+    from . import views
+
     urlpatterns = [
     url(r'^$', views.post_list, name='post_list'),
     ]
-  ```  
+  ```
   3. Create the view in [myApp.urls](#myApp/views.py) to link the myApp.urls to the class / object
 
 #### Arguments
    - required : regex, view
    - optional : kwargs, name
-    
+
 (a) __regex - regular expression__
 
 - Compiled the first time URLconf module is loaded
@@ -196,7 +198,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
 - E.g:
 ```
     For url : http://www.mysite.com/post/12345/ ==> ^post/(\d+)/$
-    
+
     - ^post/ is telling Django to take anything that has post/ at the beginning of the url (right after ^)
     - (\d+) means that there will be a number (one or more digits) and that we want the number captured and extracted
     - / tells django that another / character should follow
@@ -213,9 +215,39 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
 - Name URL used to identify the view elsewhere in django, esp from within templates. Important to name each URL in the app
 
 
-### myProject / wsgi.py  
+### myProject / wsgi.py
 An entry-point for WSGI-compatible web servers to serve your project. See How to deploy with WSGI for more details.
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
+
+
+## App
+### myApp / admin.py
+- To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
+
+- https://docs.djangoproject.com/en/1.11/ref/contrib/admin/
+- E.g:
+```
+    from .models import <App name>
+    admin.site.register(<App name>)
+```
+
+- Create superuser for admin credentials for login admin dashboard access.
+```
+    $ python manage.py createsuperuser
+```
+
+### myApp / models.py
+- Connects databases to django
+- Every time changes are made to the database (aka model), will need to re-migrate
+```
+    $ python manage.py makemigrations
+    or
+    $ python manage.py makemigrations <app name>
+```
+
+- Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#field-types).
+- See [Django Models](#django-models)
+
 
 ### myApp / views.py
 - https://docs.djangoproject.com/en/1.11/topics/http/views/
@@ -223,7 +255,7 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
                   models.py : Data layer(Database)
                      │
                      v
-    urls.py  ──>  views.py 
+    urls.py  ──>  views.py
                      │
                      v
                   templates : UI layer(base.html, etc)
@@ -240,24 +272,8 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
         return render(request, '<template>/<webPage>.html')
 ```
 
-### myApp / admin.py
-- To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
 
-- https://docs.djangoproject.com/en/1.11/ref/contrib/admin/
-- E.g: 
-```
-    from .models import Post
-    admin.site.register(Post)
-```
 
-- Create superuser for admin credentials for login admin dashboard access.
-```
-    $ python manage.py createsuperuser
-```
-
-### myApp / models.py
-- Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#field-types).
-- See [Django Models](#django-models)
 
 ## Templates
 - Django has template extending that is able to re-use HTML for different pages with different models, etc.
@@ -289,7 +305,7 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 ### Django to html syntax
 - Print variables : `{{variables}}`
 - Pipe string to convert line breaks to paragraph : ` string | linebreaksbr `
-- Loops: 
+- Loops:
 ```
     {% for post in posts %}
         {{ post }}
@@ -300,7 +316,7 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 
 ### QuerySet
-- A QuerySet is a list of objects of a given Model. 
+- A QuerySet is a list of objects of a given Model.
 (https://docs.djangoproject.com/en/1.11/ref/models/querysets/)
 - In console to query, will need to import Object(Module-class-name)
 ```

@@ -13,8 +13,13 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+# BASE_DIR = '~/dev/code/Udemy'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# '~/dev/code/Udemy/ecommerce
+# print(os.path.dirname(os.path.abspath('settings.py')))
+# print(os.path.abspath('settings.py'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -22,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'q95mv(11d6vq$onu)s7cwt0m%fzsu1_5io&2r8x=9n0wx_(nb^'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production! Static files will not be served
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -37,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +125,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# running collectstatic will copy files from this folder to STATIC_ROOT folder
+# This is Django local server files to mimic the live prod server e.g: Apache, AWS
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static_my_proj")
+]
+
+# Serving the files
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "static_root")
+
+# MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")
