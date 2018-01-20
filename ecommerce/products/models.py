@@ -8,6 +8,8 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(decimal_places=2, max_digits=20, default=39.99)
 
-
+    #Creates string representation for object
+    def __str__(self):
+        return self.title
 
 

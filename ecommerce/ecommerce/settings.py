@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'products',
 ]
 
@@ -124,8 +123,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
-
 # running collectstatic will copy files from this folder to STATIC_ROOT folder
 # This is Django local server files to mimic the live prod server e.g: Apache, AWS
 STATICFILES_DIRS = [
@@ -133,7 +130,8 @@ STATICFILES_DIRS = [
 ]
 
 # Serving the files
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "static_root")
 
-# MEDIA_ROOT = '/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "media_root")

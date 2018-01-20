@@ -98,7 +98,7 @@ https://docs.djangoproject.com/en/1.11/ref/django-admin/
     $ python -m django <command> [options]
 ```
 
-## Project
+## (I) Project
 ### myProject / Settings.py
 Settings/configuration for Django project. Django settings will tell you all about how settings work.
 https://docs.djangoproject.com/en/1.11/topics/settings/
@@ -220,7 +220,8 @@ An entry-point for WSGI-compatible web servers to serve your project. See How to
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 
-## App
+
+## (II) App
 ### myApp / admin.py
 - To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
 
@@ -241,16 +242,20 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 - Every time changes are made to the database (aka model), will need to re-migrate
 ```
     $ python manage.py makemigrations
+    $ python manage.py migrate
     or
     $ python manage.py makemigrations <app name>
+    $ python manage.py migrate <app name>
 ```
 
-- Model field types : (https://docs.djangoproject.com/en/1.11/ref/models/fields/#field-types).
+- Model field types : (https://docs.djangoproject.com/en/2.0/ref/models/fields/#field-types).
 - See [Django Models](#django-models)
 
 
+
 ### myApp / views.py
-- https://docs.djangoproject.com/en/1.11/topics/http/views/
+- https://docs.djangoproject.com/en/2.0/topics/http/views/
+- https://docs.djangoproject.com/en/2.0/ref/class-based-views/
 ```
                   models.py : Data layer(Database)
                      │
@@ -260,9 +265,11 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
                      v
                   templates : UI layer(base.html, etc)
 ```
+    - Inputs : A request
+    - Outputs: A (response) render function that renders the template myApp/<url-name>.html
+
 - View holds the implementation logic of each application, it requests information from the model and passes it to a [*template*](#templates).
 - Models gets database data in whatever form necessary and passes the data obtained to the template to display in format defined by webpage design.
-- Inputs a request and returns a render function that renders the template myApp/<url-name>.html. Templates are webpages that are reuseable.
 - Views.py will import the method (Class) in models.py and defines the url name that urls.py uses to link with the urlpatterns.
 
 ```
