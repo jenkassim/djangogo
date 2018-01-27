@@ -1,6 +1,11 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import Product
 
-admin.site.register(Product)
+# Register your models here.
+# This prints a list of slug in admin view
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'slug']
+    class Meta:
+        model = Product
+
+admin.site.register(Product, ProductAdmin)

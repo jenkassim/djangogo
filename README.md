@@ -52,6 +52,18 @@ Basic installation for django
     $ python manage.py migrate <app-name>
 ```
 
+#### Additional python libraries to use:
+(1) pillow : For ImageField control that checks if file used is an image file
+- Installation : ` $ pip install pillow `
+- Usage :
+```
+    [In models.py]:
+    image = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
+
+    [In views.py]:
+    {{ object.image.url}}
+```
+
 ### Django file directory
 
 ```
@@ -350,5 +362,29 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 
 
+
+
+# Notes..
+from products.models import Product
+
+## How to query products
+queryset = Product.objects.all()
+
+try:
+qs = Product.objects.filter(title__contains='shirt')
+qs = Product.objects.filter(title__icontains='shirt') #case insensitive
+qs = Product.objects.filter(title__icontains='shirt', description__iexact='Abc')
+qs = Product.objects.filter(id=4)
+qs = Product.objects.get(id=3)
+
+
+qs = self.get_queryset().filter(id=id)
+
+
+
+except Product.DoesNotExist:
+    print('Failure!')
+except
+    print('Everything else')
 
 
