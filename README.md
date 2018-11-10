@@ -148,15 +148,7 @@
 - For newly created projects, need to create a superuser and re-initialize the db.
 - Create an admin user for the DB:
 ```
-<<<<<<< HEAD
-    $ cd <project-name>
-    $ python manage.py runserver 8080
-
-    - For c9:
-    $ python manage.py runserver 0.0.0.0:8080
-=======
     $ python manage.py createsuperuser
->>>>>>> master
 ```
 
 - Re-migrate & re-init DB:
@@ -175,9 +167,6 @@
     $ python manage.py startapp <app-name>
 ```
 
-<<<<<<< HEAD
-#### Create / Update tables for models in database
-=======
 - Include new app to list of Installed App in `Settings.py`:
 ```
     INSTALLED_APPS = [
@@ -189,79 +178,11 @@
 
 - Create tables for models in DB
 - Whenever changes are made to models.py, migration needs to be executed:
->>>>>>> master
 ```
     $ python manage.py makemigrations <app-name>
     $ python manage.py migrate <app-name>
 ```
 
-<<<<<<< HEAD
-#### Additional python libraries to use:
-(1) pillow : For ImageField control that checks if file used is an image file
-- Installation : ` $ pip install pillow `
-- Usage :
-```
-    [In models.py]:
-    image = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
-
-    [In views.py]:
-    {{ object.image.url}}
-```
-
-### Django file directory
-
-```
-    $ tree <project path>
-
-myProject/
-├── myApp
-│   ├── admin.py
-│   ├── apps.py
-│   ├── __init__.py
-│   ├── migrations
-│   │   ├── 0001_initial.py
-│   │   └── __init__.py
-│   ├── models.py
-│   ├── templates
-│   │   └── myApp
-│   │       ├── base.html
-│   │       └── webPage.html
-│   ├── tests.py
-│   └── views.py
-├── db.sqlite3
-├── manage.py
-└── myProject
-    ├── __init__.py
-    ├── settings.py
-    ├── urls.py
-    ├── views.py
-    └── wsgi.py
-
-```
-
-### Manage.py
-Interaction with django project :
-https://docs.djangoproject.com/en/1.11/ref/django-admin/
-
-- Sets package path on sys.path and DJANGO_SETTINGS_MODULE env variables to point to settings.py file.
-- Django-admin script needs to be in the system path (originally located at Python installer : site-packages/django/bin
-- Generally, when working on a single Django project, it’s easier to use manage.py than django-admin. If you need to switch between multiple Django settings files, use django-admin with DJANGO_SETTINGS_MODULE or the --settings command line option.
-
-- Possible command line usage :
-```
-    $ django-admin <command> [options]
-    $ manage.py <command> [options]
-    $ python -m django <command> [options]
-```
-
-## (I) Project
-### myProject / Settings.py
-Settings/configuration for Django project. Django settings will tell you all about how settings work.
-https://docs.djangoproject.com/en/1.11/topics/settings/
-
-
-#### myProject / Settings.py --> Static files
-=======
 - Add new App to url in <project/url.py>
 
 [^](#table-of-content)
@@ -269,7 +190,6 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 
 ### Configure Settings
 ##### Static files
->>>>>>> master
 - Add static root directory
 - Static file consists of CSS, images, etc and doesn't depend on request context and will be the same for every user.
 ```
@@ -280,16 +200,10 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 - Command to copy static files from local django folder to server static folders
 ```
     $ python manage.py collectstatic
-<<<<<<< HEAD
-    61 static files copied to "/home/jenna_mk/dev/code/Udemy/static_cdn/static_root".
-```
-#### myProject / Settings.py --> Allowed hosts
-=======
     61 static files copied to "/home/.../static_cdn/static_root".
 ```
 
 ##### Allowed hosts
->>>>>>> master
 - When debug setting is True and ALLOWED_HOSTS is empty, the host is validated against `['localhost', '127.0.0.1', '[::1]']`
 
 - For hosted solution, will need to include host name in the settings. Eg:
@@ -297,13 +211,9 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
     ALLOWED_HOSTS =python manage.py runserver 0.0.0.0:8080 ['127.0.0.1', '<your_username>.pythonanywhere.com']
     ALLOWED_HOSTS = ['127.0.0.1',https://django-username.c9users.io]
 ```
-<<<<<<< HEAD
-#### myProject / Settings.py --> Database
-=======
 [^](#table-of-content)
 
 ### Database Settings
->>>>>>> master
 ```
     - default sqlite2 settings:
     DATABASES = {
@@ -312,21 +222,6 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-<<<<<<< HEAD
-```
-#### myProject / Settings.py --> Installed Apps
-- List all the installed apps created, at to the end of the list.
-- By default should have the following:
-```
-    INSTALLED_APPS = [
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
-    ]
-=======
 
     - postgresql settings:
     DATABASES = {
@@ -337,52 +232,13 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
             'HOST': 'db',
             'PORT': 5432,
         }
->>>>>>> master
 ```
 [^](#table-of-content)
 
-<<<<<<< HEAD
-### myProject / __init__.py
-An empty file that tells Python that this directory should be considered a Python package. If you’re a Python beginner, read more about packages in the official Python docs.
-https://docs.python.org/3/tutorial/modules.html#tut-packages
-
-- required to make Python treat the directories as containing packages; this is done to prevent directories with a common name from unintentionally hiding valid modules that occur later on the module search path.
-- init code for packageSettings/configuration for this Django project. Django settings will tell you all about how settings work.
-https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
-
-### myProject / urls.py
-- URLconfs : https://docs.djangoproject.com/en/1.11/topics/http/urls/
-- Urls.py under the project folder(myProject) is the main source of link for urls with other folder views.
-- Need to add
-  1. In myProject.urls.py: add urlpatterns to include individual child app's urls
-  ```
-      urlpatterns = [
-        url(r'^admin/', admin.site.urls),
-        url(r'', include('myApp.urls')),
-  ```
-  2. Create the individual myApp.urls.py file under the myApp folder and add the below imports. This imports django's function url and imports all views in myApp.views.py(since urls.py and views.py are in the same folder). The urlpatterns will link the regex to its views.
-  ```
-    myApp.urls.py:
-    from django.conf.urls import url
-    from . import views
-
-    urlpatterns = [
-    url(r'^$', views.post_list, name='post_list'),
-    ]
-  ```
-  3. Create the view in [myApp.urls](#myApp/views.py) to link the myApp.urls to the class / object
-
-#### Arguments
-   - required : regex, view
-   - optional : kwargs, name
-
-(a) __regex - regular expression__
-=======
 
 # Django Files and Components
 ```
     $ tree <project path>
->>>>>>> master
 
     myProject/
     ├── myApp
@@ -447,18 +303,9 @@ https://docs.djangoproject.com/en/2.0/topics/http/urls/
 - Multiple files; for project/app level
 - Project level file will store the main source of link with other folder views :
 ```
-<<<<<<< HEAD
-    For url : http://www.mysite.com/post/12345/ ==> ^post/(\d+)/$
-
-    - ^post/ is telling Django to take anything that has post/ at the beginning of the url (right after ^)
-    - (\d+) means that there will be a number (one or more digits) and that we want the number captured and extracted
-    - / tells django that another / character should follow
-    - $ then indicates the end of the URL meaning that only strings ending with the / will match this pattern
-=======
       urlpatterns = [
         url(r'^admin/', admin.site.urls),
         url(r'', include('myApp.urls')),
->>>>>>> master
 ```
 [^](#table-of-content)
 
@@ -490,65 +337,6 @@ https://docs.djangoproject.com/en/2.0/topics/http/urls/
 - Defines the database structure and relationship
 - Everytime changes are made to models.py, run the migration command to update the database schema.
 
-<<<<<<< HEAD
-### myProject / wsgi.py
-An entry-point for WSGI-compatible web servers to serve your project. See How to deploy with WSGI for more details.
-https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
-
-
-
-## (II) App
-### myApp / admin.py
-- To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
-
-- https://docs.djangoproject.com/en/1.11/ref/contrib/admin/
-- E.g:
-```
-    from .models import <App name>
-    admin.site.register(<App name>)
-```
-
-- Create superuser for admin credentials for login admin dashboard access.
-```
-    $ python manage.py createsuperuser
-```
-
-### myApp / models.py
-- Connects databases to django
-- Every time changes are made to the database (aka model), will need to re-migrate
-```
-    $ python manage.py makemigrations
-    $ python manage.py migrate
-    or
-    $ python manage.py makemigrations <app name>
-    $ python manage.py migrate <app name>
-```
-
-- Model field types : (https://docs.djangoproject.com/en/2.0/ref/models/fields/#field-types).
-- See [Django Models](#django-models)
-
-
-
-### myApp / views.py
-- https://docs.djangoproject.com/en/2.0/topics/http/views/
-- https://docs.djangoproject.com/en/2.0/ref/class-based-views/
-```
-                  models.py : Data layer(Database)
-                     │
-                     v
-    urls.py  ──>  views.py
-                     │
-                     v
-                  templates : UI layer(base.html, etc)
-```
-    - Inputs : A request
-    - Outputs: A (response) render function that renders the template myApp/<url-name>.html
-
-- View holds the implementation logic of each application, it requests information from the model and passes it to a [*template*](#templates).
-- Models gets database data in whatever form necessary and passes the data obtained to the template to display in format defined by webpage design.
-- Views.py will import the method (Class) in models.py and defines the url name that urls.py uses to link with the urlpatterns.
-
-=======
 
 ### views.py
 - https://docs.djangoproject.com/en/2.0/topics/http/views/
@@ -559,7 +347,6 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
               Either returns `HttpResponse` object containing the content for requested page, or raising an execption such as `Http404`
 ```
 - Example:
->>>>>>> master
 ```
     from django.views.generic import ListView, DetailView, TemplateView
     from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -574,10 +361,6 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 ```
 [^](#table-of-content)
 
-<<<<<<< HEAD
-
-
-=======
 ## Function Based Views
 In views.py:
 ```
@@ -619,7 +402,6 @@ In urls.py:
 - By default will look for templates in applications and template dir specified in settings.TEMPLATE_DIRS.
 
 [^](#table-of-content)
->>>>>>> master
 
 ## Templates
 - Template extending to re-use HTML for different pages with different models, views, etc.
@@ -658,18 +440,11 @@ In urls.py:
 [^](#table-of-content)
 
 
-<<<<<<< HEAD
-### QuerySet
-- A QuerySet is a list of objects of a given Model.
-(https://docs.djangoproject.com/en/1.11/ref/models/querysets/)
-- In console to query, will need to import Object(Module-class-name)
-=======
 # Django Models
 ## QuerySet
 - A QuerySet is a list of objects of a given Model.
 - https://docs.djangoproject.com/en/2.0/ref/models/querysets/
 - In console shell import:
->>>>>>> master
 ```
     $ from myApp.models import ModelClass
 ```
@@ -718,34 +493,6 @@ In urls.py:
 [^](#table-of-content)
 
 
-<<<<<<< HEAD
-
-
-# Notes..
-from products.models import Product
-
-## How to query products
-queryset = Product.objects.all()
-
-try:
-qs = Product.objects.filter(title__contains='shirt')
-qs = Product.objects.filter(title__icontains='shirt') #case insensitive
-qs = Product.objects.filter(title__icontains='shirt', description__iexact='Abc')
-qs = Product.objects.filter(id=4)
-qs = Product.objects.get(id=3)
-
-
-qs = self.get_queryset().filter(id=id)
-
-
-
-except Product.DoesNotExist:
-    print('Failure!')
-except
-    print('Everything else')
-
-
-=======
 # Errors
 ```
     "django_session" does not exist
@@ -757,4 +504,3 @@ except
     $ python manage.py migrate sessions
 ```
 [^](#table-of-content)
->>>>>>> master
