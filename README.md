@@ -20,6 +20,31 @@ Basic installation for django
 
 - Django setup should follow in the order below :
 
+### Django on Docker
+- Create docker-compose.yml, Dockerfile & requirements.txt files
+- Create Django project with docker-compose
+
+```
+    $ docker-compose run web django-admin startproject <project>
+```
+
+- django-admin created by root, change ownership to user
+```
+    $ sudo chown -R $USER:$USER
+```
+
+- Update settings.py with DB settings (take note of port used)
+```
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': 5432,
+        }
+}
+```
 
 #### Creating new django project
 ```
@@ -78,6 +103,7 @@ myProject/
     ├── __init__.py
     ├── settings.py
     ├── urls.py
+    ├── views.py
     └── wsgi.py
 
 ```
@@ -96,7 +122,8 @@ https://docs.djangoproject.com/en/1.11/ref/django-admin/
     $ manage.py <command> [options]
     $ python -m django <command> [options]
 ```
-    
+
+## (I) Project
 ### myProject / Settings.py
 Settings/configuration for Django project. Django settings will tell you all about how settings work.
 https://docs.djangoproject.com/en/1.11/topics/settings/
@@ -215,8 +242,43 @@ https://docs.djangoproject.com/en/1.11/topics/settings/ / set __all__ variable
 An entry-point for WSGI-compatible web servers to serve your project. See How to deploy with WSGI for more details.
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
+
+
+## (II) App
+### myApp / admin.py
+- To include models defined in models.py and register to be visible on the admin page. `admin.site.register(method)`
+
+- https://docs.djangoproject.com/en/1.11/ref/contrib/admin/
+- E.g:
+```
+    from .models import <App name>
+    admin.site.register(<App name>)
+```
+
+- Create superuser for admin credentials for login admin dashboard access.
+```
+    $ python manage.py createsuperuser
+```
+
+### myApp / models.py
+- Connects databases to django
+- Every time changes are made to the database (aka model), will need to re-migrate
+```
+    $ python manage.py makemigrations
+    $ python manage.py migrate
+    or
+    $ python manage.py makemigrations <app name>
+    $ python manage.py migrate <app name>
+```
+
+- Model field types : (https://docs.djangoproject.com/en/2.0/ref/models/fields/#field-types).
+- See [Django Models](#django-models)
+
+
+
 ### myApp / views.py
-- https://docs.djangoproject.com/en/1.11/topics/http/views/
+- https://docs.djangoproject.com/en/2.0/topics/http/views/
+- https://docs.djangoproject.com/en/2.0/ref/class-based-views/
 ```
                   models.py : Data layer(Database)
                      │
@@ -226,9 +288,11 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
                      v
                   templates : UI layer(base.html, etc)
 ```
+    - Inputs : A request
+    - Outputs: A (response) render function that renders the template myApp/<url-name>.html
+
 - View holds the implementation logic of each application, it requests information from the model and passes it to a [*template*](#templates).
 - Models gets database data in whatever form necessary and passes the data obtained to the template to display in format defined by webpage design.
-- Inputs a request and returns a render function that renders the template myApp/<url-name>.html. Templates are webpages that are reuseable.
 - Views.py will import the method (Class) in models.py and defines the url name that urls.py uses to link with the urlpatterns.
 
 ```
@@ -325,5 +389,29 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 
 
+
+
+# Notes..
+from products.models import Product
+
+## How to query products
+queryset = Product.objects.all()
+
+try:
+qs = Product.objects.filter(title__contains='shirt')
+qs = Product.objects.filter(title__icontains='shirt') #case insensitive
+qs = Product.objects.filter(title__icontains='shirt', description__iexact='Abc')
+qs = Product.objects.filter(id=4)
+qs = Product.objects.get(id=3)
+
+
+qs = self.get_queryset().filter(id=id)
+
+
+
+except Product.DoesNotExist:
+    print('Failure!')
+except
+    print('Everything else')
 
 
